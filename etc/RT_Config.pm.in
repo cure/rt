@@ -2644,24 +2644,34 @@ Set($WikiImplicitLinks, 0);
 
 =item C<%LinkedQueuePortlets>
 
-If %LinkedQueuePortlets is set, new portlets will display on the ticket
-display page of each specified queue. Each portlet lists all the linked
-tickets grouped by queue name, and based on the indicated link type.
-Acceptable link types include, 'DependsOn', 'DependedOnBy', 'HasMember'
-(children), 'MemberOf' (parents), 'RefersTo', and 'ReferredToBy'.
-Additionally, the type, 'All', which lists all linked tickets by queue,
-is accepted. In the example below, portlets will be added to all tickets
-in both the General queue and the Support queue:
+C<%LinkedQueuePortlets> allows you to display links to tickets in
+another queue in a stand-alone portlet on the ticket display page.
+This makes it easier to highlight specific ticket links separate from
+the standard Links portlet.
 
-Set( %LinkedQueuePortlets, (
-    General     => [
-        { General   => [ 'All' ] },
-        { Testing   => [ 'HasMember', 'MemberOf', 'RefersTo' ] },
-    ],
-    Support   => [
-        { General => [ 'All' ] },
-    ],
-));
+For example, you might have a Sales queue that tracks incoming product
+requests, and for each ticket you create a linked ticket in the Shipping
+queue for each outgoing shipment. You could add the configuration below
+to create a stand-alone Shipping portlet on tickets in the Sales queue,
+making it easier to see those linked tickets. You might have a Returns
+queue to show as well.
+
+    Set( %LinkedQueuePortlets, (
+        'Sales' => [
+            { 'Shipping'   => [ 'All' ] },
+            { 'Returns'   => [ 'RefersTo' ] },
+        ],
+        'Shipping'   => [
+            { 'Postage' => [ 'DependsOn', 'HasMember' ] },
+        ],
+    ));
+
+You can include multiple linked queues in each ticket and they are
+displayed in the order you define them in the configuration. The values
+are RT link types: 'DependsOn', 'DependedOnBy', 'HasMember'
+(children), 'MemberOf' (parents), 'RefersTo', and 'ReferredToBy'.
+'All' lists all linked tickets. You can include multiple link types for
+each as shown above.
 
 =cut
 
@@ -2669,9 +2679,8 @@ Set( %LinkedQueuePortlets, () );
 
 =item C<$LinkedQueuePortletFormat>
 
-$LinkedQueuePortletFormat is the default format for displaying the
-list of tickets in each linked queue portlet ( %LinkedQueuePortlets
-must be enabled ).
+C<$LinkedQueuePortletFormat> defines the format for displaying
+linked tickets in each linked queue portlet defined by C<%LinkedQueuePortlets>.
 
 =cut
 
