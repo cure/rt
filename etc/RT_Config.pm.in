@@ -3598,6 +3598,16 @@ Set(%AdminSearchResultRows,
     Assets       => 50,
 );
 
+=item C<$ShowEditSystemConfig>
+
+RT allows superusers to edit RT system configurations via web UI.
+
+Set C<$ShowEditSystemConfig> to 0 if you want to disable this feature.
+
+=cut
+
+Set($ShowEditSystemConfig, 1);
+
 =back
 
 
